@@ -1,0 +1,40 @@
+{
+  "name": "elections",
+  "description": "A sample REST API about General Elections in Brazil",
+  "version": "1.0.0",
+  "author": "Eyder Rios",
+  "license": "ISC",
+  "main": "./dist/main/index.js",
+  "scripts": {
+    "start": "node dist/main/index.js",
+    "build": "rm -rf ./dist && tsc -p tsconfig.build.json",
+    "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "jest --passWithNoTests --no-cache --runInBand",
+    "test:watch": "npm test -- --watch",
+    "test:staged": "npm test -- --findRelatedTests",
+    "test:coverage": "npm test -- --coverage",
+    "format": "prettier --write ."
+  },
+  "keywords": [],
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@eslint/js": "^9.17.0",
+    "@types/jest": "^29.5.14",
+    "@types/module-alias": "^2.0.4",
+    "@types/node": "^22.10.5",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "lint-staged": "^15.3.0",
+    "prettier": "^3.4.2",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.19.1"
+  },
+  "dependencies": {
+    "module-alias": "^2.2.3"
+  }
+}
