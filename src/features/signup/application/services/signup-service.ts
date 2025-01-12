@@ -1,5 +1,6 @@
 import { Signup } from "../../domain/contratcs/signup"
 import { UserAccount } from "../../domain/user-account"
+import { CarPlateIsRequiredError } from "../errors/car-plate-is-required-error"
 
 export class SignupService implements Signup {
   async execute(input: SignupService.input): Promise<UserAccount> {
@@ -11,6 +12,10 @@ export class SignupService implements Signup {
       input.isDriver,
       input.carPlate,
     )
+
+    if (user.isDriver && !user.carPlate) {
+      throw new CarPlateIsRequiredError()
+    }
 
     return user
   }
