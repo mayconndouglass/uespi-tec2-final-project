@@ -47,4 +47,11 @@ describe('SignupService', () => {
       isDriver: false,
     })
   })
+
+  
+  it('should throw an error if no car plate is provided for a driver', async () => {
+    user.isDriver = true
+
+    expect(() => sut.execute(user)).rejects.toThrow()
+  })
 })
