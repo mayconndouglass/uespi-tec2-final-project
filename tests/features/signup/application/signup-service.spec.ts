@@ -2,9 +2,11 @@ import { SignupService } from '../../../../src/features/signup/application/servi
 import { UserAccount } from '../../../../src/features/signup/domain/user-account'
 
 describe('SignupService', () => {
-  it('should call SignupService.execute() with correct parameters', () => {
-    const sut = new SignupService()
-    const user = {
+  let sut: SignupService
+  let user: SignupService.input
+
+  beforeAll(() => {
+    user = {
       name: 'John Doe',
       email: 'john.doe@example.com',
       cpf: '12345678900',
@@ -12,7 +14,17 @@ describe('SignupService', () => {
       isDriver: false,
       password: 'password'
     }
-    
+  })
+
+  beforeEach(() => {
+    sut = new SignupService()
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it('should call SignupService.execute() with correct parameters', () => {
     const executeSpy = jest.spyOn(sut, 'execute')
     sut.execute(user)
 
@@ -21,16 +33,6 @@ describe('SignupService', () => {
   })
 
   it('Should returns a UserAccount on successful signupService.execute()', async () => {
-    const sut = new SignupService()
-    const user = {
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      cpf: '12345678900',
-      isPassenger: true,
-      isDriver: false,
-      password: 'password'
-    }
-    
     const responseData: UserAccount = await sut.execute(user)
 
     expect(responseData).toBeInstanceOf(UserAccount)
