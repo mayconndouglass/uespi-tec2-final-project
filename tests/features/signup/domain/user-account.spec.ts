@@ -3,13 +3,13 @@ import { UserAccount } from '../../../../src/features/signup/domain/user-account
 describe('UserAccount', () => {
   it('should create a new UserAccount instance', () => {
     const sut = new UserAccount(
-      '1234567890',
       'John Doe',
       'john.doe@example.com',
       '12345678900',
       true,
       false,
-      'ABC123'
+      'ABC123',
+      '1234567890',
     )
 
     expect(sut.id).toBe('1234567890')
