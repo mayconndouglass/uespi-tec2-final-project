@@ -1,20 +1,4 @@
-class SignupService {
-  execute(input: SignupService.input): void { }
-}
-
-namespace SignupService {
-  export type input = {
-    name: string
-    email: string
-    cpf: string
-    password: string
-    isPassenger: boolean
-    isDriver: boolean
-    carPlate?: string
-  }
-  
-  export type output = void
-}
+import { SignupService } from '../../../../src/features/signup/application/services/signup-service'
 
 describe('SignupService', () => {
   it('should call SignupService.execute() with correct parameters', () => {
