@@ -1,3 +1,4 @@
+import { CarPlateIsRequiredError } from '../../../../src/features/signup/application/errors/car-plate-is-required-error'
 import { SignupService } from '../../../../src/features/signup/application/services/signup-service'
 import { UserAccount } from '../../../../src/features/signup/domain/user-account'
 
@@ -52,6 +53,6 @@ describe('SignupService', () => {
   it('should throw an error if no car plate is provided for a driver', async () => {
     user.isDriver = true
 
-    expect(() => sut.execute(user)).rejects.toThrow()
+    expect(() => sut.execute(user)).rejects.toThrow(CarPlateIsRequiredError)
   })
 })
