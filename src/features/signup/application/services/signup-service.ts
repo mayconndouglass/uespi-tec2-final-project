@@ -1,4 +1,4 @@
-import { Signup } from "../../domain/contratcs/signup"
+import { Signup } from "../../domain/contracts/signup"
 import { UserAccount } from "../../domain/entities/user-account"
 import { CarPlateIsRequiredError } from "../errors/car-plate-is-required-error"
 import { PassengerShouldNotHaveCarPlateError } from "../errors/passenger-should-not-have-car-plate-error"
