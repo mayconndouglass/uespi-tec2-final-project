@@ -7,6 +7,7 @@ type UserAccountProps = {
   cpf: string
   isDriver: boolean
   carPlate?: string
+  passwordHash: string
 }
 
 export class UserAccount {

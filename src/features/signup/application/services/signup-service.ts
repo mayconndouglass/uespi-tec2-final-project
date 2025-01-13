@@ -9,13 +9,7 @@ export class SignupService implements Signup {
   constructor(private readonly userRepository: UserRepository) {}
 
   async execute(input: SignupService.input): Promise<UserAccount> {
-    const user = new UserAccount({
-      name: input.name,
-      email: input.email,
-      cpf: input.cpf,
-      isDriver: input.isDriver,
-      carPlate: input.carPlate,
-    })
+    const user = new UserAccount({...input, passwordHash: input.password})
 
     if (user.props.isDriver && !user.props.carPlate) {
       throw new CarPlateIsRequiredError()
