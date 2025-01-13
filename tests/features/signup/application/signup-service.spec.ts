@@ -2,6 +2,8 @@ import { CarPlateIsRequiredError } from '../../../../src/features/signup/applica
 import { PassengerShouldNotHaveCarPlateError } from '../../../../src/features/signup/application/errors/passenger-should-not-have-car-plate-error'
 import { SignupService } from '../../../../src/features/signup/application/services/signup-service'
 import { UserAccount } from '../../../../src/features/signup/domain/entities/user-account'
+import { mock,  MockProxy } from 'jest-mock-extended'
+import { UserRepository } from '../../../../src/features/signup/application/contracts/user-repository'
 
 describe('SignupService', () => {
   let sut: SignupService
@@ -61,5 +63,15 @@ describe('SignupService', () => {
     expect(() => sut.execute(user)).rejects.toThrow(
       PassengerShouldNotHaveCarPlateError
     )
+  })
+
+  it.only('should call UserRepository.userByEmail() if the data passes the validations', async () => {
+    const userRepository: MockProxy<UserRepository> = mock()
+    const sut = new SignupService(userRepository)
+
+    sut.execute(user)
+
+    expect(userRepository.findUserByEmail).toHaveBeenCalledTimes(1)
+    expect(userRepository.findUserByEmail).toHaveBeenCalledWith(user.email)
   })
 })
