@@ -9,7 +9,8 @@ export class SignupService implements Signup {
   constructor(private readonly userRepository: UserRepository) {}
 
   async execute(input: SignupService.input): Promise<UserAccount> {
-    const user = new UserAccount({...input, passwordHash: input.password})
+    const { password, ...restInput } = input
+    const user = new UserAccount({...restInput, passwordHash: password})
 
     if (user.props.isDriver && !user.props.carPlate) {
       throw new CarPlateIsRequiredError()
@@ -24,6 +25,8 @@ export class SignupService implements Signup {
     if (emailExists) {
       throw new EmailAlreadyExistsError()
     }
+
+    await this.userRepository.register(user)
 
     return user
   }
