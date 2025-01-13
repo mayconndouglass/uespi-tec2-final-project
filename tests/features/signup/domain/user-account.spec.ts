@@ -8,6 +8,7 @@ describe('UserAccount', () => {
       cpf: '12345678900',
       isDriver: false,
       carPlate: 'ABC123',
+      passwordHash: 'password'
     })
 
     expect(sut.props.name).toBe('John Doe')
@@ -15,5 +16,6 @@ describe('UserAccount', () => {
     expect(sut.props.cpf).toBe('12345678900')
     expect(sut.props.isDriver).toBe(false)
     expect(sut.props.carPlate).toBe('ABC123')
+    expect(sut.props.passwordHash).toBe('password')
   })
 })
