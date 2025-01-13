@@ -5,14 +5,20 @@ import { UserAccount } from '../../../../src/features/signup/domain/entities/use
 import { mock,  MockProxy } from 'jest-mock-extended'
 
 import { CarPlateIsRequiredError } from '../../../../src/features/signup/application/errors/car-plate-is-required-error'
-import { PassengerShouldNotHaveCarPlateError } from '../../../../src/features/signup/application/errors/passenger-should-not-have-car-plate-error'
+
+import { EmailAlreadyExistsError } from '../../../../src/features/signup/application/errors/email-already-exists-error'
+import {
+  PassengerShouldNotHaveCarPlateError
+} from '../../../../src/features/signup/application/errors/passenger-should-not-have-car-plate-error'
 
 describe('SignupService', () => {
   let sut: SignupService
   let user: SignupService.input
+  let userAccount: UserAccount
   let userRepository: MockProxy<UserRepository>
 
   beforeAll(() => {
+    userAccount = mock<UserAccount>()
     userRepository = mock<UserRepository>()
   })
 
@@ -74,5 +80,11 @@ describe('SignupService', () => {
 
     expect(userRepository.findUserByEmail).toHaveBeenCalledTimes(1)
     expect(userRepository.findUserByEmail).toHaveBeenCalledWith(user.email)
+  })
+
+  it('should throws EmailAlreadyExistsError if UserRepository.userByEmail() returns null', async () => {
+    userRepository.findUserByEmail.mockResolvedValueOnce(userAccount)
+
+    expect(() => sut.execute(user)).rejects.toThrow(EmailAlreadyExistsError)
   })
 })
