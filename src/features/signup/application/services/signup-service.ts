@@ -1,9 +1,12 @@
 import { Signup } from "../../domain/contracts/signup"
 import { UserAccount } from "../../domain/entities/user-account"
+import { UserRepository } from "../contracts/user-repository"
 import { CarPlateIsRequiredError } from "../errors/car-plate-is-required-error"
 import { PassengerShouldNotHaveCarPlateError } from "../errors/passenger-should-not-have-car-plate-error"
 
 export class SignupService implements Signup {
+  constructor(private readonly userRepository: UserRepository) {}
+
   async execute(input: SignupService.input): Promise<UserAccount> {
     const user = new UserAccount({
       name: input.name,
@@ -20,6 +23,8 @@ export class SignupService implements Signup {
     if (!user.props.isDriver && user.props.carPlate) {
       throw new PassengerShouldNotHaveCarPlateError()
     }
+
+    await this.userRepository.findUserByEmail(input.email)
 
     return user
   }
