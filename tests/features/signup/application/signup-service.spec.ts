@@ -14,12 +14,30 @@ import {
 describe('SignupService', () => {
   let sut: SignupService
   let user: SignupService.input
-  let userAccount: UserAccount
+  let userAccountMock: UserAccount
   let userRepository: MockProxy<UserRepository>
+  let userAccount: UserAccount
+  let userWithId: SignupService.input & { id: string }
 
   beforeAll(() => {
-    userAccount = mock<UserAccount>()
+    userAccountMock = mock<UserAccount>()
     userRepository = mock<UserRepository>()
+    userWithId = {
+      id: '1234567890',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      cpf: '12345678900',
+      isDriver: false,
+      password: 'password'
+    }
+    userAccount = new UserAccount({
+      id: userWithId.id,
+      name: userWithId.name,
+      email: userWithId.email,
+      cpf: userWithId.cpf,
+      isDriver: userWithId.isDriver,
+      passwordHash: userWithId.password
+    })
   })
 
   beforeEach(() => {
@@ -57,6 +75,7 @@ describe('SignupService', () => {
       email: 'john.doe@example.com',
       cpf: '12345678900',
       isDriver: false,
+      passwordHash: 'password'
     })
   })
 
@@ -83,8 +102,17 @@ describe('SignupService', () => {
   })
 
   it('should throws EmailAlreadyExistsError if UserRepository.userByEmail() returns null', async () => {
-    userRepository.findUserByEmail.mockResolvedValueOnce(userAccount)
+    userRepository.findUserByEmail.mockResolvedValueOnce(userAccountMock)
 
     expect(() => sut.execute(user)).rejects.toThrow(EmailAlreadyExistsError)
+  })
+
+  it('should call UserRepository.register() if UserRepository.userByEmail() returns null', async () => {
+    userRepository.findUserByEmail.mockResolvedValueOnce(null)
+    
+    await sut.execute(userWithId)
+
+    expect(userRepository.register).toHaveBeenCalledTimes(1)
+    expect(userRepository.register).toHaveBeenCalledWith(userAccount)
   })
 })
