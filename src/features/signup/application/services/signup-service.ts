@@ -1,24 +1,23 @@
 import { Signup } from "../../domain/contratcs/signup"
-import { UserAccount } from "../../domain/user-account"
+import { UserAccount } from "../../domain/entities/user-account"
 import { CarPlateIsRequiredError } from "../errors/car-plate-is-required-error"
 import { PassengerShouldNotHaveCarPlateError } from "../errors/passenger-should-not-have-car-plate-error"
 
 export class SignupService implements Signup {
   async execute(input: SignupService.input): Promise<UserAccount> {
-    const user = new UserAccount(
-      input.name,
-      input.email,
-      input.cpf,
-      input.isPassenger,
-      input.isDriver,
-      input.carPlate,
-    )
+    const user = new UserAccount({
+      name: input.name,
+      email: input.email,
+      cpf: input.cpf,
+      isDriver: input.isDriver,
+      carPlate: input.carPlate,
+    })
 
-    if (user.isDriver && !user.carPlate) {
+    if (user.props.isDriver && !user.props.carPlate) {
       throw new CarPlateIsRequiredError()
     }
 
-    if (!user.isDriver && user.carPlate) {
+    if (!user.props.isDriver && user.props.carPlate) {
       throw new PassengerShouldNotHaveCarPlateError()
     }
 
@@ -32,7 +31,6 @@ export namespace SignupService {
     email: string
     cpf: string
     password: string
-    isPassenger: boolean
     isDriver: boolean
     carPlate?: string
   }

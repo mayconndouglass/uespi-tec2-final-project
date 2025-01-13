@@ -1,4 +1,4 @@
-import { UserAccount } from "../user-account"
+import { UserAccount } from "../entities/user-account"
 
 export interface Signup {
   execute(input: SignupInput): Promise<UserAccount>

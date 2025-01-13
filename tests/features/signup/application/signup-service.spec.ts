@@ -1,8 +1,7 @@
-import { rejects } from 'assert'
 import { CarPlateIsRequiredError } from '../../../../src/features/signup/application/errors/car-plate-is-required-error'
 import { PassengerShouldNotHaveCarPlateError } from '../../../../src/features/signup/application/errors/passenger-should-not-have-car-plate-error'
 import { SignupService } from '../../../../src/features/signup/application/services/signup-service'
-import { UserAccount } from '../../../../src/features/signup/domain/user-account'
+import { UserAccount } from '../../../../src/features/signup/domain/entities/user-account'
 
 describe('SignupService', () => {
   let sut: SignupService
@@ -13,7 +12,6 @@ describe('SignupService', () => {
       name: 'John Doe',
       email: 'john.doe@example.com',
       cpf: '12345678900',
-      isPassenger: true,
       isDriver: false,
       password: 'password'
     }
@@ -39,14 +37,13 @@ describe('SignupService', () => {
     const responseData: UserAccount = await sut.execute(user)
 
     expect(responseData).toBeInstanceOf(UserAccount)
-    expect(responseData.id).toBeDefined()
-    expect(typeof responseData.id).toBe('string')
-    expect(responseData).toEqual({
-      id: responseData.id,
+    expect(responseData.props.id).toBeDefined()
+    expect(typeof responseData.props.id).toBe('string')
+    expect(responseData.props).toEqual({
+      id: responseData.props.id,
       name: 'John Doe',
       email: 'john.doe@example.com',
       cpf: '12345678900',
-      isPassenger: true,
       isDriver: false,
     })
   })
@@ -58,7 +55,6 @@ describe('SignupService', () => {
   })
 
   it('should throw an error if a passenger has a car plate', async () => {
-    user.isPassenger = true
     user.isDriver = false
     user.carPlate = "ABC-123"
 
