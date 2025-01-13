@@ -1,15 +1,23 @@
+import { SignupService } from '../../../../src/features/signup/application/services/signup-service'
+import { UserRepository } from '../../../../src/features/signup/application/contracts/user-repository'
+import { UserAccount } from '../../../../src/features/signup/domain/entities/user-account'
+
+import { mock,  MockProxy } from 'jest-mock-extended'
+
 import { CarPlateIsRequiredError } from '../../../../src/features/signup/application/errors/car-plate-is-required-error'
 import { PassengerShouldNotHaveCarPlateError } from '../../../../src/features/signup/application/errors/passenger-should-not-have-car-plate-error'
-import { SignupService } from '../../../../src/features/signup/application/services/signup-service'
-import { UserAccount } from '../../../../src/features/signup/domain/entities/user-account'
-import { mock,  MockProxy } from 'jest-mock-extended'
-import { UserRepository } from '../../../../src/features/signup/application/contracts/user-repository'
 
 describe('SignupService', () => {
   let sut: SignupService
   let user: SignupService.input
+  let userRepository: MockProxy<UserRepository>
 
   beforeAll(() => {
+    userRepository = mock<UserRepository>()
+  })
+
+  beforeEach(() => {
+    sut = new SignupService(userRepository)
     user = {
       name: 'John Doe',
       email: 'john.doe@example.com',
@@ -17,10 +25,6 @@ describe('SignupService', () => {
       isDriver: false,
       password: 'password'
     }
-  })
-
-  beforeEach(() => {
-    sut = new SignupService()
   })
 
   afterEach(() => {
@@ -65,11 +69,8 @@ describe('SignupService', () => {
     )
   })
 
-  it.only('should call UserRepository.userByEmail() if the data passes the validations', async () => {
-    const userRepository: MockProxy<UserRepository> = mock()
-    const sut = new SignupService(userRepository)
-
-    sut.execute(user)
+  it('should call UserRepository.userByEmail() if the data passes the validations', async () => {
+    await sut.execute(user)
 
     expect(userRepository.findUserByEmail).toHaveBeenCalledTimes(1)
     expect(userRepository.findUserByEmail).toHaveBeenCalledWith(user.email)
