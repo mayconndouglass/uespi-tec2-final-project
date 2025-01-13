@@ -2,6 +2,7 @@ import { Signup } from "../../domain/contracts/signup"
 import { UserAccount } from "../../domain/entities/user-account"
 import { UserRepository } from "../contracts/user-repository"
 import { CarPlateIsRequiredError } from "../errors/car-plate-is-required-error"
+import { EmailAlreadyExistsError } from "../errors/email-already-exists-error"
 import { PassengerShouldNotHaveCarPlateError } from "../errors/passenger-should-not-have-car-plate-error"
 
 export class SignupService implements Signup {
@@ -24,7 +25,11 @@ export class SignupService implements Signup {
       throw new PassengerShouldNotHaveCarPlateError()
     }
 
-    await this.userRepository.findUserByEmail(input.email)
+    const emailExists = await this.userRepository.findUserByEmail(user.props.email)
+
+    if (emailExists) {
+      throw new EmailAlreadyExistsError()
+    }
 
     return user
   }
