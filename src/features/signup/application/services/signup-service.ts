@@ -1,32 +1,40 @@
+import { Sign } from "crypto";
 import { Signup } from "../../domain/contracts/signup";
 import { UserAccount } from "../../domain/entities/user-account";
+import { Encrypter } from "../contracts/encrypter";
 import { UserRepository } from "../contracts/user-repository";
 import { CarPlateIsRequiredError } from "../errors/car-plate-is-required-error";
 import { EmailAlreadyExistsError } from "../errors/email-already-exists-error";
 import { PassengerShouldNotHaveCarPlateError } from "../errors/passenger-should-not-have-car-plate-error";
 
 export class SignupService implements Signup {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly encrypter: Encrypter
+  ) {}
 
-  async execute(input: SignupService.input): Promise<UserAccount> {
+  async execute(input: SignupService.input): SignupService.output {
     const { password, ...restInput } = input;
-    const user = new UserAccount({ ...restInput, passwordHash: password });
 
-    if (user.props.isDriver && !user.props.carPlate) {
+    if (input.isDriver && !input.carPlate) {
       throw new CarPlateIsRequiredError();
     }
 
-    if (!user.props.isDriver && user.props.carPlate) {
+    if (!input.isDriver && input.carPlate) {
       throw new PassengerShouldNotHaveCarPlateError();
     }
 
-    const emailExists = await this.userRepository.findUserByEmail(
-      user.props.email,
+    const userWithSameEmail = await this.userRepository.findUserByEmail(
+      input.email,
     );
 
-    if (emailExists) {
+    if (userWithSameEmail) {
       throw new EmailAlreadyExistsError();
     }
+
+    const passwordHash = await this.encrypter.encrypt(input.password);
+    
+    const user = new UserAccount({ ...restInput, passwordHash });
 
     await this.userRepository.register(user);
 
