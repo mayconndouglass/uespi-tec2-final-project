@@ -45,12 +45,12 @@ describe("SignupService", () => {
       email: userWithId.email,
       cpf: userWithId.cpf,
       isDriver: userWithId.isDriver,
-      passwordHash: userWithId.password,
+      passwordHash: 'hash',
     });
   });
 
   beforeEach(() => {
-    sut = new SignupService(userRepository);
+    sut = new SignupService(userRepository, bcryptAdapter);
     user = {
       name: "John Doe",
       email: "john.doe@example.com",
@@ -84,7 +84,7 @@ describe("SignupService", () => {
       email: "john.doe@example.com",
       cpf: "12345678900",
       isDriver: false,
-      passwordHash: "password",
+      passwordHash: "hash",
     });
   });
 
