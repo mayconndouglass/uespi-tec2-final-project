@@ -1,4 +1,6 @@
+import { rejects } from 'assert'
 import { CarPlateIsRequiredError } from '../../../../src/features/signup/application/errors/car-plate-is-required-error'
+import { PassengerShouldNotHaveCarPlateError } from '../../../../src/features/signup/application/errors/passenger-should-not-have-car-plate-error'
 import { SignupService } from '../../../../src/features/signup/application/services/signup-service'
 import { UserAccount } from '../../../../src/features/signup/domain/user-account'
 
@@ -49,10 +51,19 @@ describe('SignupService', () => {
     })
   })
 
-  
   it('should throw an error if no car plate is provided for a driver', async () => {
     user.isDriver = true
 
     expect(() => sut.execute(user)).rejects.toThrow(CarPlateIsRequiredError)
+  })
+
+  it('should throw an error if a passenger has a car plate', async () => {
+    user.isPassenger = true
+    user.isDriver = false
+    user.carPlate = "ABC-123"
+
+    expect(() => sut.execute(user)).rejects.toThrow(
+      PassengerShouldNotHaveCarPlateError
+    )
   })
 })
