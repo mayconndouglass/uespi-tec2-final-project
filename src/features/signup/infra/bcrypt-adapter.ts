@@ -1,16 +1,16 @@
-import bcrypt from 'bcrypt'
-import { Encrypter } from "../application/contracts/encrypter"
+import bcrypt from "bcrypt";
+import { Encrypter } from "../application/contracts/encrypter";
 
 export class BcryptAdapter implements Encrypter {
-  private readonly salt: number
-  
+  private readonly salt: number;
+
   constructor(salt: number) {
-    this.salt = salt
+    this.salt = salt;
   }
 
   async encrypt(value: string): Promise<string> {
-    bcrypt.hash(value, 10)
-    
-    return ''
+    const hash = await bcrypt.hash(value, 10);
+
+    return hash;
   }
 }
