@@ -9,6 +9,15 @@ import { CarPlateIsRequiredError } from "../../../../src/features/signup/applica
 import { EmailAlreadyExistsError } from "../../../../src/features/signup/application/errors/email-already-exists-error";
 import { PassengerShouldNotHaveCarPlateError } from "../../../../src/features/signup/application/errors/passenger-should-not-have-car-plate-error";
 
+import { BcryptAdapter } from "../../../../src/features/signup/infra/bcrypt-adapter";
+
+
+jest.mock("bcrypt", () => ({
+  async hash(): Promise<string> {
+    return new Promise((resolve) => resolve("hash"));
+  },
+}));
+
 describe("SignupService", () => {
   let sut: SignupService;
   let user: SignupService.input;
@@ -16,10 +25,12 @@ describe("SignupService", () => {
   let userRepository: MockProxy<UserRepository>;
   let userAccount: UserAccount;
   let userWithId: SignupService.input & { id: string };
+  let bcryptAdapter: BcryptAdapter;
 
   beforeAll(() => {
     userAccountMock = mock<UserAccount>();
     userRepository = mock<UserRepository>();
+    bcryptAdapter = new BcryptAdapter(10);
     userWithId = {
       id: "1234567890",
       name: "John Doe",
@@ -112,5 +123,14 @@ describe("SignupService", () => {
 
     expect(userRepository.register).toHaveBeenCalledTimes(1);
     expect(userRepository.register).toHaveBeenCalledWith(userAccount);
+  });
+
+  it("should hash the user password using BcryptAdapter", async () => {
+    const hashSpy = jest.spyOn(bcryptAdapter, "encrypt");
+
+    await sut.execute(user);
+
+    expect(hashSpy).toHaveBeenCalledTimes(1);
+    expect(hashSpy).toHaveBeenCalledWith(user.password);
   });
 });
