@@ -1,16 +1,15 @@
-import { SignupService } from "../../../../src/features/signup/application/services/signup-service";
-import { UserRepository } from "../../../../src/features/signup/application/contracts/user-repository";
-import { UserAccount } from "../../../../src/features/signup/domain/entities/user-account";
+import { SignupService } from "@/features/signup/application/services/signup-service";
+import { UserRepository } from "@/features/signup/application/contracts";
+import { UserAccount } from "@/features/signup/domain/entities";
 
 import { mock, MockProxy } from "jest-mock-extended";
+import { BcryptAdapter } from "@/features/signup/infra/bcrypt-adapter";
 
-import { CarPlateIsRequiredError } from "../../../../src/features/signup/application/errors/car-plate-is-required-error";
-
-import { EmailAlreadyExistsError } from "../../../../src/features/signup/application/errors/email-already-exists-error";
-import { PassengerShouldNotHaveCarPlateError } from "../../../../src/features/signup/application/errors/passenger-should-not-have-car-plate-error";
-
-import { BcryptAdapter } from "../../../../src/features/signup/infra/bcrypt-adapter";
-
+import {
+  CarPlateIsRequiredError,
+  EmailAlreadyExistsError,
+  PassengerShouldNotHaveCarPlateError,
+} from "@/features/signup/application/errors";
 
 jest.mock("bcrypt", () => ({
   async hash(): Promise<string> {

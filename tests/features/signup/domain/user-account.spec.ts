@@ -1,4 +1,4 @@
-import { UserAccount } from "../../../../src/features/signup/domain/entities/user-account";
+import { UserAccount } from "@/features/signup/domain/entities";
 
 describe("UserAccount", () => {
   it("should create a new UserAccount instance", () => {

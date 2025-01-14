@@ -103,7 +103,7 @@ tsconfig.json
 
 ## Dependency Diagram
 
-![alt text](oficial.drawio.png)
+![alt text](dependecy-diagram.png)
 
 ## Team Members
 

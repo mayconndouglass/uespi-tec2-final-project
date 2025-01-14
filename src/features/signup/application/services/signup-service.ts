@@ -1,5 +1,4 @@
-import { Sign } from "crypto";
-import { Signup } from "../../domain/contracts/signup";
+import { Signup } from "@/features/signup/domain/contracts/signup";
 import { UserAccount } from "../../domain/entities/user-account";
 import { Encrypter } from "../contracts/encrypter";
 import { UserRepository } from "../contracts/user-repository";
